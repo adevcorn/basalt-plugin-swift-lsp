@@ -9,6 +9,10 @@ const CAP_DIAGNOSTICS: u64 = 1 << 0;
 const CAP_HOVER: u64 = 1 << 9;
 const CAP_SEMANTIC_TOKENS: u64 = 1 << 11;
 const CAP_SYMBOL_RELATIONS: u64 = 1 << 12;
+/// Tells the host to call `build_project_model` with a per-file-inferred
+/// project root before each semantic dispatch.  Must match
+/// `CapabilityFlags::SEMANTIC_NEEDS_PROJECT_MODEL` in core/src/plugin_meta.rs.
+const CAP_SEMANTIC_NEEDS_PROJECT_MODEL: u64 = 1 << 15;
 
 const LOG_INFO: i32 = 1;
 const LOG_ERROR: i32 = 3;
@@ -576,7 +580,7 @@ pub extern "C" fn basalt_plugin_metadata() -> i32 {
     unsafe {
         META.api_version = BASALT_PLUGIN_API_VERSION;
         META._pad = 0;
-        META.hook_flags = CAP_DIAGNOSTICS | CAP_HOVER | CAP_SEMANTIC_TOKENS | CAP_SYMBOL_RELATIONS;
+        META.hook_flags = CAP_DIAGNOSTICS | CAP_HOVER | CAP_SEMANTIC_TOKENS | CAP_SYMBOL_RELATIONS | CAP_SEMANTIC_NEEDS_PROJECT_MODEL;
         META.name_ptr = NAME.as_ptr() as u32;
         META.version_ptr = VERSION.as_ptr() as u32;
         META.provides_ptr = PROVIDES.as_ptr() as u32;
